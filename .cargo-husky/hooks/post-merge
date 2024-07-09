@@ -1,0 +1,5 @@
+#!/bin/bash
+# .git/hooks/post-merge
+
+echo "Updating dependencies..."
+cargo update

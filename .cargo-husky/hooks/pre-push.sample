@@ -1,0 +1,38 @@
+#!/bin/bash
+
+echo "Running pre-push checks..."
+
+# Quick format check (doesn't modify files)
+cargo fmt -- --check
+if [ $? -ne 0 ]; then
+  echo "Formatting check failed. Run 'cargo fmt' to fix."
+  exit 1
+fi
+
+# Run tests
+echo "Running tests..."
+cargo test
+if [ $? -ne 0 ]; then
+  echo "Tests failed. Please fix the failing tests before pushing."
+  exit 1
+fi
+
+# Check for outdated dependencies
+echo "Checking for outdated dependencies..."
+cargo outdated
+if [ $? -ne 0 ]; then
+  echo "Some dependencies are outdated. Consider updating them."
+  # Note: We're not failing the push for outdated dependencies,
+  # just notifying the developer.
+fi
+
+# Run a more comprehensive clippy check
+echo "Running comprehensive clippy check..."
+cargo clippy -- -W clippy::all -W clippy::pedantic
+if [ $? -ne 0 ]; then
+  echo "Comprehensive clippy check failed. Please review and fix warnings."
+  exit 1
+fi
+
+echo "All pre-push checks passed."
+exit 0
