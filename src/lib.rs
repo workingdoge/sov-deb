@@ -1,12 +1,13 @@
 mod call;
-mod event;
 mod genesis;
 #[cfg(feature = "native")]
 mod query;
 
 use borsh::{BorshDeserialize, BorshSerialize};
 pub use call::CallMessage;
-pub use event::Event;
+
+pub mod event;
+pub use crate::event::Event;
 #[cfg(feature = "native")]
 pub use query::*;
 use serde::{Deserialize, Serialize};

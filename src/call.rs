@@ -32,7 +32,7 @@ impl<S: sov_modules_api::Spec> TAccountModule<S> {
         self.emit_event(
             state,
             Event::AccountCreated {
-                address: context.sender().clone(),
+                address: AccountAddress(context.sender().clone()),
             },
         );
         Ok(CallResponse::default())
