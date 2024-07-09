@@ -1,15 +1,15 @@
 use std::convert::Infallible;
 
-use deb::{AccountAddress, CallMessage, TAccountModule, TAccountModuleConfig};
+use sov_deb::{AccountAddress, CallMessage, Deb, DebConfig};
 use sov_modules_api::{
-    utils::generate_address, ApiStateAccessor, Context, Module, StateCheckpoint, WorkingSet,
+    utils::generate_address, Context, Module, StateCheckpoint,
 };
 use sov_prover_storage_manager::new_orphan_storage;
 
 type S = sov_test_utils::TestSpec;
 #[test]
 fn create_tacc() -> Result<(), Infallible> {
-    let tacc = TAccountModule::<S>::default();
+    let tacc = Deb::<S>::default();
     let tmpdir = tempfile::tempdir().unwrap();
     let state = StateCheckpoint::<S>::new(new_orphan_storage(tmpdir.path()).unwrap());
 
@@ -18,8 +18,8 @@ fn create_tacc() -> Result<(), Infallible> {
     let sequencer_address = generate_address::<S>("sequencer");
     let owner_context = Context::<S>::new(owner, Default::default(), sequencer_address, 1);
 
-    let config = TAccountModuleConfig {};
-    let mut genesis = state.to_genesis_state_accessor::<TAccountModule<S>>(&config);
+    let config = DebConfig {};
+    let mut genesis = state.to_genesis_state_accessor::<Deb<S>>(&config);
     tacc.genesis(&config, &mut genesis).unwrap();
 
     let mut state = genesis.checkpoint().to_working_set_unmetered();

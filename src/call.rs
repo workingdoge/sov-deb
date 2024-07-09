@@ -1,6 +1,6 @@
 use crate::event::Event;
-use crate::{AccountAddress, BalanceType, TAccount, TAccountModule};
-use anyhow::{anyhow, Result};
+use crate::{AccountAddress, BalanceType, TAccount, Deb};
+use anyhow::{anyhow, Context as _, Result};
 use serde::{Deserialize, Serialize};
 use sov_modules_api::{CallResponse, Context, Error, EventEmitter, TxState};
 use std::fmt::Debug;
@@ -17,7 +17,7 @@ pub enum CallMessage {
     // Withdraw { amount: u128 },
 }
 
-impl<S: sov_modules_api::Spec> TAccountModule<S> {
+impl<S: sov_modules_api::Spec> Deb<S> {
     /// Creates a new account for the sender
     pub(crate) fn create_account(
         &self,
@@ -27,7 +27,7 @@ impl<S: sov_modules_api::Spec> TAccountModule<S> {
         let acc = TAccount::new(0, 0);
         self.accounts
             .set(&AccountAddress::new(context.sender()), &acc, state)
-            .map_err(|_e| anyhow!("StateAccessorError: Unable to set account as key"))?;
+            .context("StateAccessorError: Unable to set account as key")?;
 
         self.emit_event(
             state,

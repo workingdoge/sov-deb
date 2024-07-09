@@ -6,7 +6,7 @@ use sov_modules_api::prelude::UnwrapInfallible;
 use sov_modules_api::{ApiStateAccessor, Spec, StateReader};
 use sov_state::User;
 
-use crate::{AccountAddress, BalanceType, TAccountModule};
+use crate::{AccountAddress, BalanceType, Deb};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AccountResponse {
@@ -20,7 +20,7 @@ pub struct BalanceResponse {
     pub amount: u128,
 }
 
-impl<S: Spec> TAccountModule<S> {
+impl<S: Spec> Deb<S> {
     pub fn account<Reader: StateReader<User>>(
         &self,
         owner: AccountAddress<S>,
@@ -52,7 +52,7 @@ impl<S: Spec> TAccountModule<S> {
 }
 
 #[rpc_gen(client, server, namespace = "tacc")]
-impl<S: Spec> TAccountModule<S> {
+impl<S: Spec> Deb<S> {
     #[rpc_method(name = "getAccount")]
     pub fn get_account(
         &self,

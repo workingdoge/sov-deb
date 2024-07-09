@@ -104,19 +104,19 @@ pub enum BalanceType {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct TAccountModuleConfig {}
+pub struct DebConfig {}
 
 #[derive(ModuleInfo)]
-pub struct TAccountModule<S: Spec> {
+pub struct Deb<S: Spec> {
     #[id]
     pub id: ModuleId,
     #[state]
     pub accounts: StateMap<AccountAddress<S>, TAccount>,
 }
 
-impl<S: Spec> sov_modules_api::Module for TAccountModule<S> {
+impl<S: Spec> sov_modules_api::Module for Deb<S> {
     type Spec = S;
-    type Config = TAccountModuleConfig;
+    type Config = DebConfig;
     type CallMessage = call::CallMessage;
     type Event = Event<S>;
 
